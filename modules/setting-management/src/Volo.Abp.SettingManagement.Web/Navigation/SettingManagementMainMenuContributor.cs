@@ -4,21 +4,20 @@ using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using System.Linq;
 using System.Threading.Tasks;
-using Volo.Abp.SettingManagement.Localization;
 using Volo.Abp.SettingManagement.Web.Pages.SettingManagement;
 using Volo.Abp.UI.Navigation;
+using Volo.Abp.SettingManagement.Localization;
 
 namespace Volo.Abp.SettingManagement.Web.Navigation
 {
     public class SettingManagementMainMenuContributor : IMenuContributor
     {
-        public async Task ConfigureMenuAsync(MenuConfigurationContext context)
+        public virtual async Task ConfigureMenuAsync(MenuConfigurationContext context)
         {
             if (context.Menu.Name != StandardMenus.Main)
             {
                 return;
             }
-
 
             var settingManagementPageOptions = context.ServiceProvider.GetRequiredService<IOptions<SettingManagementPageOptions>>().Value;
             var settingPageCreationContext = new SettingPageCreationContext(context.ServiceProvider);
@@ -30,7 +29,7 @@ namespace Volo.Abp.SettingManagement.Web.Navigation
                 return;
             }
 
-            var l = context.ServiceProvider.GetRequiredService<IStringLocalizer<AbpSettingManagementResource>>();
+            var l = context.GetLocalizer<AbpSettingManagementResource>();
 
             context.Menu
                 .GetAdministration()
@@ -38,14 +37,13 @@ namespace Volo.Abp.SettingManagement.Web.Navigation
                     new ApplicationMenuItem(
                         SettingManagementMenuNames.GroupName,
                         l["Settings"],
-                        "/SettingManagement",
+                        "~/SettingManagement",
                         icon: "fa fa-cog"
                     )
                 );
-            
         }
 
-        private async Task<bool> CheckAnyOfPagePermissionsGranted(
+        protected virtual async Task<bool> CheckAnyOfPagePermissionsGranted(
             SettingManagementPageOptions settingManagementPageOptions,
             SettingPageCreationContext settingPageCreationContext)
         {

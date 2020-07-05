@@ -1,4 +1,4 @@
-﻿using Mongo2Go;
+﻿using System;
 using Volo.Abp.Data;
 using Volo.Abp.Identity.MongoDB;
 using Volo.Abp.IdentityServer.MongoDB;
@@ -14,21 +14,16 @@ namespace Volo.Abp.IdentityServer
     )]
     public class AbpIdentityServerMongoDbTestModule : AbpModule
     {
-        private MongoDbRunner _mongoDbRunner;
-
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
-            _mongoDbRunner = MongoDbRunner.Start();
+            var connectionString = MongoDbFixture.ConnectionString.EnsureEndsWith('/') +
+                                   "Db_" +
+                                   Guid.NewGuid().ToString("N");
 
-            Configure<DbConnectionOptions>(options =>
+            Configure<AbpDbConnectionOptions>(options =>
             {
-                options.ConnectionStrings.Default = _mongoDbRunner.ConnectionString;
+                options.ConnectionStrings.Default = connectionString;
             });
-        }
-
-        public override void OnApplicationShutdown(ApplicationShutdownContext context)
-        {
-            _mongoDbRunner.Dispose();
         }
     }
 }

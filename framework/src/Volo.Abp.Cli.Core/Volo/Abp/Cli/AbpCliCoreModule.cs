@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using Volo.Abp.Cli.Commands;
 using Volo.Abp.Domain;
 using Volo.Abp.IdentityModel;
@@ -18,13 +19,21 @@ namespace Volo.Abp.Cli
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
-            Configure<CliOptions>(options =>
+            Configure<AbpCliOptions>(options =>
             {
                 options.Commands["help"] = typeof(HelpCommand);
                 options.Commands["new"] = typeof(NewCommand);
-                options.Commands["add"] = typeof(AddCommand);
+                options.Commands["get-source"] = typeof(GetSourceCommand);
+                options.Commands["update"] = typeof(UpdateCommand);
+                options.Commands["add-package"] = typeof(AddPackageCommand);
+                options.Commands["add-module"] = typeof(AddModuleCommand);
                 options.Commands["login"] = typeof(LoginCommand);
                 options.Commands["logout"] = typeof(LogoutCommand);
+                options.Commands["generate-proxy"] = typeof(GenerateProxyCommand);
+                options.Commands["suite"] = typeof(SuiteCommand);
+                options.Commands["switch-to-preview"] = typeof(SwitchNightlyPreviewCommand);
+                options.Commands["switch-to-stable"] = typeof(SwitchStableCommand);
+                options.Commands["translate"] = typeof(TranslateCommand);
             });
         }
     }
